@@ -1,0 +1,25 @@
+name: Build Windows 11 VST3 for Fender Studio Pro
+
+on:
+  push:
+    branches: [ "**" ]
+  workflow_dispatch:
+
+jobs:
+  build-windows-vst3:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Configure CMake (JUCE 8 + 64-bit VST3)
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build OmniMaster Pro VST3
+        run: cmake --build build --config Release --parallel 4
+
+      - name: Upload Compiled Windows 11 VST3 Bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: OmniMasterPro-Windows11-VST3
+          path: build/OmniMasterPro_artefacts/Release/VST3/OmniMaster Pro.vst3
